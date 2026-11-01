@@ -4,6 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MuGöl Words</title>
+<meta name="theme-color" content="#246ea5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MuGöl Words">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <style>
 :root{--sky1:#6cc0ee;--sky2:#def3ff;--sun:#ffe68a;--cloud:#fff;--stars:0;--h0:#a9c9d9;--h1:#9ad27a;--h2:#6cb35a;--h3:#4a9a4a;--tree:#2f7a3f;--ink:#12403a;--cell:#fbfdfb;--fill:#1f8a7a;--fillink:#fff;--hint:#e3992f;--shadow:rgba(18,64,58,.28);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 :root[data-theme="dusk"]{--sky1:#4b3a7c;--sky2:#ffa97a;--sun:#ffd9a0;--cloud:#ffcfa8;--stars:.25;--h0:#8b5e8a;--h1:#7a4f7e;--h2:#5c3c6e;--h3:#3f2a58;--tree:#2a1c42;--ink:#3a1f4e;--cell:#fff3ea;--fill:#c24f7c;--shadow:rgba(40,10,60,.35)}
@@ -142,9 +151,47 @@ header span,#chips span{background:color-mix(in srgb,var(--cell) 90%,transparent
 #bg .ff circle{animation:glow 4s ease-in-out infinite}#bg .ff circle:nth-child(2n){animation-delay:-2s}#bg .ff circle:nth-child(3n){animation-delay:-1s}
 @keyframes glow{0%,100%{opacity:.2;transform:translateY(0)}50%{opacity:1;transform:translateY(-8px)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+#bar .tool,#lside{flex:none}
+#lside{display:flex;flex-direction:column;align-items:center;gap:10px}
+#lk{display:flex;flex-direction:column;align-items:center;gap:4px}
+#lkt{min-width:46px;text-align:center;font:700 12px/1 "Trebuchet MS","Segoe UI",system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink);padding:3px 7px;border-radius:10px;background:color-mix(in srgb,var(--cell) 90%,transparent);box-shadow:0 2px 5px var(--shadow)}
+#lk.rdy #lkt{background:var(--hint);color:#fff}
+#lk.rdy #lkb{animation:lkshake 1.6s ease-in-out infinite;box-shadow:0 4px 0 var(--shadow),0 0 0 0 var(--hint),0 0 16px var(--hint)}
+@keyframes lkshake{0%,40%,100%{transform:none}4%{transform:translateX(-5px) rotate(-12deg)}8%{transform:translateX(5px) rotate(12deg)}12%{transform:translateX(-5px) rotate(-10deg)}16%{transform:translateX(5px) rotate(10deg)}20%{transform:translateX(-3px) rotate(-6deg)}24%{transform:translateX(3px) rotate(6deg)}28%{transform:translateX(-2px) rotate(-3deg)}32%{transform:translateX(2px) rotate(3deg)}36%{transform:none}}
+.i{width:1.2em;height:1.2em;vertical-align:-.25em;display:inline-block;flex:none;margin:0 .08em;color:inherit;overflow:visible}
+.tool{display:inline-flex;align-items:center;justify-content:center}
+.tool .i{width:30px;height:30px;margin:0;vertical-align:middle}
+.tool.sm .i{width:24px;height:24px}
+.hb .tool.sm .i{width:22px;height:22px}
+.big .i{width:1.25em;height:1.25em;margin:0 .4em 0 0}
+.conf .i{width:26px;height:26px}
+header span,#chips span{white-space:nowrap}
+#bar{position:relative;justify-content:center}
+#lside{position:absolute;left:0;top:50%;transform:translateY(-50%)}
+#ww{position:relative;flex:none}
+#shuf{position:absolute;left:calc(50% - 22px);top:calc(50% - 22px);margin:0}
+#inst[hidden],#lbtn[hidden]{display:none}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M12 2.5a6.5 6.5 0 0 0-3.9 11.7c.7.6 1.1 1.3 1.1 2.1v.7h5.6v-.7c0-.8.4-1.5 1.1-2.1A6.5 6.5 0 0 0 12 2.5z" fill="#ffd54a" stroke="#e39b1b" stroke-width="1.4" stroke-linejoin="round"/><rect x="9.2" y="17.7" width="5.6" height="2.2" rx="1" fill="#9aa5ad"/><rect x="10.2" y="20" width="3.6" height="1.8" rx=".9" fill="#7b8791"/><path d="M9.6 8.4a2.7 2.7 0 0 1 2.1-1.8" stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none" opacity=".9"/></symbol>
+<symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="#ffc933" stroke="#d98e0b" stroke-width="1.5"/><circle cx="12" cy="12" r="6.1" fill="#ffdc6b" stroke="#e8a21f" stroke-width="1.3"/><path d="M9.6 9.4a3.6 3.6 0 0 1 2.4-1.2" stroke="#fff" stroke-width="1.4" stroke-linecap="round" fill="none"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.7 5.7 6.2.8-4.6 4.3 1.2 6.2L12 16.7 6.5 19.8l1.2-6.2L3.1 9.3l6.2-.8z" fill="#ffd23f" stroke="#e39b1b" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+<symbol id="i-wheel" viewBox="0 0 24 24"><path d="M12 10.5L7 21.5M12 10.5l5 11M5 21.6h14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3v14M5 10h14M7.05 5.05l9.9 9.9M16.95 5.05l-9.9 9.9" stroke="currentColor" stroke-width="1" opacity=".75"/><circle cx="12" cy="10" r="1.4" fill="currentColor"/><circle cx="12" cy="3" r="1.7" fill="#ff6b8b"/><circle cx="16.95" cy="5.05" r="1.7" fill="#ffd23f"/><circle cx="19" cy="10" r="1.7" fill="#4fc3f7"/><circle cx="16.95" cy="14.95" r="1.7" fill="#7bd88f"/><circle cx="12" cy="17" r="1.7" fill="#ff6b8b"/><circle cx="7.05" cy="14.95" r="1.7" fill="#ffd23f"/><circle cx="5" cy="10" r="1.7" fill="#4fc3f7"/><circle cx="7.05" cy="5.05" r="1.7" fill="#7bd88f"/></symbol>
+<symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M3 7h3.5c2 0 3.2 1 4.2 2.4l3.1 4.4c1 1.4 2.2 2.2 4.2 2.2H21M3 17h3.5c2 0 3.2-1 4.2-2.4M14 9.8C15 8.5 16.2 8 17.8 8H21M18.6 5.4L21.4 8l-2.8 2.6M18.6 14.4L21.4 17l-2.8 2.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-map" viewBox="0 0 24 24"><path d="M3 6.5l5.5-2 7 2 5.5-2v13l-5.5 2-7-2-5.5 2z" fill="#bfe3a8" stroke="#3b7a57" stroke-width="1.5" stroke-linejoin="round"/><path d="M8.5 4.5v13M15.5 6.5v13" stroke="#3b7a57" stroke-width="1.3"/><circle cx="12" cy="11.5" r="1.7" fill="#e8574a"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24"><path d="M12 2.8l8.5 4.2v10L12 21.2 3.5 17V7z" fill="#d9a066" stroke="#8a5a2b" stroke-width="1.5" stroke-linejoin="round"/><path d="M3.5 7L12 11.2 20.5 7M12 11.2v10" fill="none" stroke="#8a5a2b" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.8 4.9l8.5 4.2" stroke="#f3e0c2" stroke-width="2" stroke-linecap="round"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><path d="M10.27 4.80 L10.72 2.49 L13.28 2.49 L13.73 4.80 L15.87 5.69 L17.82 4.37 L19.63 6.18 L18.31 8.13 L19.20 10.27 L21.51 10.72 L21.51 13.28 L19.20 13.73 L18.31 15.87 L19.63 17.82 L17.82 19.63 L15.87 18.31 L13.73 19.20 L13.28 21.51 L10.72 21.51 L10.27 19.20 L8.13 18.31 L6.18 19.63 L4.37 17.82 L5.69 15.87 L4.80 13.73 L2.49 13.28 L2.49 10.72 L4.80 10.27 L5.69 8.13 L4.37 6.18 L6.18 4.37 L8.13 5.69Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+<symbol id="i-dice" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4.2" fill="#fff" stroke="currentColor" stroke-width="1.6"/><circle cx="8.6" cy="8.6" r="1.5" fill="currentColor"/><circle cx="15.4" cy="8.6" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="8.6" cy="15.4" r="1.5" fill="currentColor"/><circle cx="15.4" cy="15.4" r="1.5" fill="currentColor"/></symbol>
+<symbol id="i-install" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 7.2v6.4M9.2 11l2.8 2.8 2.8-2.8M10.4 18.5h3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6.5C10 5 7 4.6 3.5 5v13c3.5-.4 6.5 0 8.5 1.5 2-1.5 5-1.9 8.5-1.5V5c-3.5-.4-6.5 0-8.5 1.5z" fill="#fff6dc" stroke="#7a5a2b" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 6.5v13" stroke="#7a5a2b" stroke-width="1.5"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="#46c27a"/><path d="M7.5 12.4l3 3 6-6.4" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-gem" viewBox="0 0 24 24"><path d="M6.5 3.5h11l4 5.2L12 21 2.5 8.7z" fill="#5cd3f0" stroke="#1f93b8" stroke-width="1.5" stroke-linejoin="round"/><path d="M2.5 8.7h19M9.5 3.5L12 8.7l2.5-5.2M12 8.7V21" fill="none" stroke="#1f93b8" stroke-width="1.2" stroke-linejoin="round"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2z" fill="#ffe066" stroke="#e8a21f" stroke-width="1.2" stroke-linejoin="round"/></symbol>
+<symbol id="i-conf1" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="18" rx="2" fill="#ff6b8b" transform="rotate(35 12 12)"/></symbol>
+<symbol id="i-conf2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6.5" fill="#4fc3f7"/></symbol>
+</defs></svg>
 <svg id="bg" viewBox="0 0 400 800" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
 <defs>
 <linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--sky1)"/><stop offset=".55" style="stop-color:color-mix(in srgb,var(--sky1),var(--sky2) 55%)"/><stop offset="1" style="stop-color:var(--sky2)"/></linearGradient>
@@ -182,8 +229,9 @@ header span,#chips span{background:color-mix(in srgb,var(--cell) 90%,transparent
  <section class="scr on" id="menu">
   <div id="chips"></div><div class="card"><h1>MuGöl Words</h1><p>Harfleri birleştir, kelimeleri bul</p></div>
   <button class="big" id="play">Oyna</button>
-  <button class="big alt" id="rnd">🎲 Rastgele Seviye</button>
-  <button class="big alt" data-go="lucky" id="lbtn">🎡 Şans Çarkı</button>
+  <button class="big alt" id="rnd"><svg class="i" aria-hidden="true"><use href="#i-dice"/></svg>Rastgele Seviye</button>
+  <button class="big alt" id="inst" type="button"><svg class="i" aria-hidden="true"><use href="#i-install"/></svg>İndir</button>
+  <button class="big alt" data-go="lucky" id="lbtn" hidden><svg class="i" aria-hidden="true"><use href="#i-wheel"/></svg>Şans Çarkı</button>
   <button class="big alt" data-go="map">Seviyeler</button>
   <button class="big alt" data-go="set">Ayarlar</button>
  </section>
@@ -209,14 +257,16 @@ header span,#chips span{background:color-mix(in srgb,var(--cell) 90%,transparent
   <button class="big" id="spin"></button>
  </section>
  <section class="scr" id="game">
-  <header><div class="hb"><button class="tool sm" data-go="map" aria-label="Seviye haritası">🗺</button><button class="tool sm" id="bxb" aria-label="Bonus kutusu">📦<small id="bn">0</small></button><button class="tool sm" data-go="set" aria-label="Ayarlar">⚙</button></div><span id="lv"></span><span id="hc"></span></header>
+  <header><div class="hb"><button class="tool sm" data-go="map" aria-label="Seviye haritası"><svg class="i" aria-hidden="true"><use href="#i-map"/></svg></button><button class="tool sm" id="bxb" aria-label="Bonus kutusu"><svg class="i" aria-hidden="true"><use href="#i-box"/></svg><small id="bn">0</small></button><button class="tool sm" data-go="set" aria-label="Ayarlar"><svg class="i" aria-hidden="true"><use href="#i-gear"/></svg></button></div><span id="lv"></span><span id="hc"></span></header>
   <div id="gridwrap"><div id="grid"></div></div>
   <div id="preview"></div>
   <div id="toast"></div>
   <div id="bar">
-   <button class="tool" id="hint" aria-label="İpucu">💡<small id="hn"></small></button>
-   <div id="wheel"></div>
-   <button class="tool" id="shuf" aria-label="Karıştır">🔀</button>
+   <div id="lside">
+    <button class="tool" id="hint" aria-label="İpucu"><svg class="i" aria-hidden="true"><use href="#i-bulb"/></svg><small id="hn"></small></button>
+    <div id="lk"><button class="tool" id="lkb" aria-label="Şans çarkı"><svg class="i" aria-hidden="true"><use href="#i-wheel"/></svg></button><span id="lkt"></span></div>
+   </div>
+   <div id="ww"><div id="wheel"></div><button class="tool sm" id="shuf" aria-label="Harfleri karıştır"><svg class="i" aria-hidden="true"><use href="#i-shuffle"/></svg></button></div>
   </div>
  </section>
 </div>
@@ -226,7 +276,10 @@ header span,#chips span{background:color-mix(in srgb,var(--cell) 90%,transparent
 <script src="kelimeler3.js"></script><script src="kelimeler4.js"></script><script src="kelimeler5.js"></script><script src="kelimeler6.js"></script><script src="kelimeler7.js"></script>
 <script>
 const $=id=>document.getElementById(id);
-let S={theme:"auto",snd:true,unlocked:0,hints:3,score:0,coins:50,stars:{},lastSpin:"",box:[],claimed:[],custom:[]};
+const ic=n=>`<svg class="i" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const IC={"💡":"bulb","🪙":"coin","⭐":"star","🎡":"wheel","🎲":"dice","📲":"install","📦":"box","💎":"gem","📖":"book","✅":"check"};
+const E=t=>String(t).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])).replace(/💡|🪙|⭐|🎡|🎲|📲|📦|💎|📖|✅/g,m=>ic(IC[m]));
+let S={theme:"auto",snd:true,unlocked:0,hints:3,score:0,coins:50,stars:{},lastSpin:"",lastSpinAt:0,box:[],claimed:[],custom:[]};
 try{Object.assign(S,JSON.parse(localStorage.getItem("wow")||"{}"))}catch(e){}
 const save=()=>{try{localStorage.setItem("wow",JSON.stringify(S))}catch(e){}};
 const mq=matchMedia("(prefers-color-scheme: dark)");
@@ -359,19 +412,19 @@ function check(){
   if(found.size===G.words.length){
     const st=used===0?3:used<3?2:1;S.stars[lvl]=Math.max(S.stars[lvl]||0,st);S.hints++;S.unlocked=Math.max(S.unlocked,lvl+1);add(50*st,20);beep(660,.3);confetti();
     const last=false;
-    $("ovh").textContent="★".repeat(st)+"☆".repeat(3-st);$("ovt").textContent=(last?"Tüm seviyeleri bitirdin! ":"")+"⭐ +"+gain+"   🪙 +20   💡 +1";
+    $("ovh").textContent="★".repeat(st)+"☆".repeat(3-st);$("ovt").innerHTML=E((last?"Tüm seviyeleri bitirdin! ":"")+"⭐ +"+gain+" · 🪙 +20 · 💡 +1");
     $("next").style.display=last?"none":"";
     setTimeout(()=>$("ov").classList.add("show"),500);
   }
 }
 function stats(){
   const st=Object.values(S.stars).reduce((a,v)=>a+(v||0),0),dn=Math.min(S.unlocked,LV.length);
-  $("stt").innerHTML=`✅ Biten seviye: <b>${dn}</b><br>★ Toplam yıldız: <b>${st}</b><br>📦 Bonus kelime: <b>${S.box.length}</b><br>📖 Sözlük: <b>${DICT.length}</b> kelime`;
+  $("stt").innerHTML=`${ic("check")} Biten seviye: <b>${dn}</b><br>${ic("star")} Toplam yıldız: <b>${st}</b><br>${ic("box")} Bonus kelime: <b>${S.box.length}</b><br>${ic("book")} Sözlük: <b>${DICT.length}</b> kelime`;
   $("vib").textContent=S.vib!==false?"Açık":"Kapalı";$("vib").classList.toggle("on",S.vib!==false);
 }
-function upd(){try{stats()}catch(e){}$("bn").textContent=MS.some(m=>S.box.length>=m.n&&!S.claimed.includes(m.n))?"!":(bonus?bonus.size:0);$("hn").textContent=S.hints;$("hc").textContent="⭐ "+S.score+"  🪙 "+S.coins;$("chips").innerHTML=`<span>⭐ ${S.score}</span><span>🪙 ${S.coins}</span><span>💡 ${S.hints}</span>`;$("lbtn").textContent=S.lastSpin===new Date().toDateString()?"🎡 Şans Çarkı":"🎡 Şans Çarkı · Bedava!"}
+function upd(){try{stats()}catch(e){}$("bn").textContent=MS.some(m=>S.box.length>=m.n&&!S.claimed.includes(m.n))?"!":(bonus?bonus.size:0);$("hn").textContent=S.hints;$("hc").innerHTML=E("⭐ "+S.score+"  🪙 "+S.coins);$("chips").innerHTML=`<span>${ic("star")} ${S.score}</span><span>${ic("coin")} ${S.coins}</span><span>${ic("bulb")} ${S.hints}</span>`;$("lbtn").innerHTML=ic("wheel")+(freeSpin()?"Şans Çarkı · Bedava!":"Şans Çarkı")}
 function renderWheel(){
-  const wl=$("wheel");W=Math.min(Math.floor(innerWidth*.62),250,Math.floor(innerHeight*.32));
+  const wl=$("wheel");W=Math.min(Math.floor(innerWidth*.58),250,Math.floor(innerHeight*.32));
   wl.style.width=wl.style.height=W+"px";
   wl.innerHTML=`<svg width="${W}" height="${W}"><polyline id="ln" fill="none" stroke="var(--fill)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/></svg>`;
   const n=letters.length,R=W/2-46;
@@ -389,7 +442,7 @@ function draw(p){
   $("ln").setAttribute("points",pts.join(" "));
   $("preview").innerHTML=sel.length?"<b>"+sel.map(d=>d.textContent).join("")+"</b>":"";
 }
-function msg(t){const e=$("toast");e.textContent=t;e.classList.add("on");clearTimeout(msg.t);msg.t=setTimeout(()=>e.classList.remove("on"),1600)}
+function msg(t){const e=$("toast");e.innerHTML=E(t);e.classList.add("on");clearTimeout(msg.t);msg.t=setTimeout(()=>e.classList.remove("on"),1600)}
 const wheel=$("wheel");
 wheel.addEventListener("pointerdown",e=>{
   const p=pos(e),d=near(p[0],p[1]);if(!d)return;
@@ -434,49 +487,64 @@ document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>show(b.dataset.g
 document.querySelectorAll("#themes button").forEach(b=>b.onclick=()=>{S.theme=b.dataset.t;save();theme()});
 $("snd").onclick=()=>{S.snd=!S.snd;save();theme();beep(600)};
 $("rst").onclick=()=>{
-  if($("rst").dataset.sure){S.unlocked=0;S.hints=3;S.score=0;S.coins=50;S.stars={};S.lastSpin="";S.box=[];S.claimed=[];save();upd();delete $("rst").dataset.sure;$("rst").textContent="Sıfırlandı"}
+  if($("rst").dataset.sure){S.unlocked=0;S.hints=3;S.score=0;S.coins=50;S.stars={};S.lastSpin="";S.lastSpinAt=0;S.box=[];S.claimed=[];save();upd();delete $("rst").dataset.sure;$("rst").textContent="Sıfırlandı"}
   else{$("rst").dataset.sure=1;$("rst").textContent="Emin misin? Tekrar dokun"}
 };
 addEventListener("resize",()=>{fit();if(G&&$("game").classList.contains("on"))renderWheel()});
 function add(p,c){S.score+=p;S.coins+=c;gain+=p;save();upd()}
 function confetti(){
   if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-  const e=["🎉","⭐","✨","🪙","🎊"];
-  for(let i=0;i<28;i++){const d=document.createElement("div");d.className="conf";d.textContent=e[i%5];d.style.left=Math.random()*95+"vw";d.style.animationDelay=Math.random()*.6+"s";document.body.appendChild(d);setTimeout(()=>d.remove(),3200)}
+  const e=["star","coin","spark","conf1","conf2"];
+  for(let i=0;i<28;i++){const d=document.createElement("div");d.className="conf";d.innerHTML=ic(e[i%5]);d.style.left=Math.random()*95+"vw";d.style.animationDelay=Math.random()*.6+"s";document.body.appendChild(d);setTimeout(()=>d.remove(),3200)}
 }
 /* Şans çarkı */
 const PR=[{t:"💡 +1",k:"h",v:1,w:20},{t:"🪙 +20",k:"c",v:20,w:22},{t:"⭐ +100",k:"s",v:100,w:18},{t:"💡 +2",k:"h",v:2,w:10},{t:"🪙 +50",k:"c",v:50,w:14},{t:"⭐ +250",k:"s",v:250,w:8},{t:"💡 +3",k:"h",v:3,w:5},{t:"🪙 +100",k:"c",v:100,w:3}];
 let rot=0,spinning=false;
-const freeSpin=()=>S.lastSpin!==new Date().toDateString();
+const CD=5*60*1000;
+const spinLeft=()=>{const t=Date.now()-(S.lastSpinAt||0);return t<0?CD:Math.max(0,CD-t)};
+const freeSpin=()=>spinLeft()<=0;
+const fmt=ms=>{const t=Math.ceil(ms/1000);return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0")};
+let wasRdy=null;
+function tick(){
+  const l=spinLeft(),r=l<=0;
+  $("lk").classList.toggle("rdy",r);
+  $("lkt").textContent=r?"Hazır!":fmt(l);
+  $("lkb").setAttribute("aria-label",r?"Şans çarkı: hazır":"Şans çarkı: "+fmt(l)+" kaldı");
+  if(wasRdy===false&&r&&!$("lk").hidden){try{if(S.vib!==false&&navigator.vibrate)navigator.vibrate([80,50,80,50,160])}catch(e){}}
+  wasRdy=r;
+  if(cur==="lucky"&&!spinning)$("spin").innerHTML=E(r?"Çevir (bedava)":"Çevir (50 🪙) · bedava: "+fmt(l));
+}
+setInterval(tick,1000);
+$("lkb").onclick=()=>show("lucky");
 function renderLucky(){
   const R=$("fw").offsetWidth*.34,cols=["var(--fill)","var(--hint)"];
   $("disc").style.background="conic-gradient("+PR.map((p,i)=>cols[i%2]+" "+i*45+"deg "+(i+1)*45+"deg").join(",")+")";
-  $("disc").innerHTML=PR.map((p,i)=>`<b style="transform:rotate(${i*45+22.5}deg) translateY(-${R}px)">${p.t}</b>`).join("");
-  $("spin").textContent=freeSpin()?"Çevir (bedava)":"Çevir (50 🪙)";
+  $("disc").innerHTML=PR.map((p,i)=>`<b style="transform:rotate(${i*45+22.5}deg) translateY(-${R}px)">${E(p.t)}</b>`).join("");
+  tick();
 }
 $("spin").onclick=()=>{
   if(spinning)return;const fr=freeSpin();
-  if(!fr){if(S.coins<50){$("res").textContent="Çevirmek için 50 🪙 gerekli";return}S.coins-=50}
-  S.lastSpin=new Date().toDateString();spinning=true;save();upd();$("res").textContent="Dönüyor...";
+  if(!fr){if(S.coins<50){$("res").innerHTML=E("Çevirmek için 50 🪙 gerekli");return}S.coins-=50}
+  if(fr)S.lastSpinAt=Date.now();spinning=true;save();upd();$("res").textContent="Dönüyor...";
   let r=Math.random()*PR.reduce((a,p)=>a+p.w,0),idx=0;
   for(;idx<PR.length-1;idx++){if((r-=PR[idx].w)<0)break}
   rot=Math.ceil(rot/360)*360+2160-(idx*45+22.5+Math.random()*24-12);
   $("disc").style.transform="rotate("+rot+"deg)";
   setTimeout(()=>{const p=PR[idx];if(p.k==="h")S.hints+=p.v;else if(p.k==="c")S.coins+=p.v;else S.score+=p.v;
-    save();upd();spinning=false;beep(700,.3);confetti();$("res").textContent="Kazandın: "+p.t;$("spin").textContent="Çevir (50 🪙)"},4400);
+    save();upd();spinning=false;beep(700,.3);confetti();$("res").innerHTML=E("Kazandın: "+p.t);tick()},4400);
 };
 /* Bonus kutusu */
 const MS=[{n:10,t:"💡 +2",h:2},{n:25,t:"🪙 +50",c:50},{n:50,t:"💡 +3",h:3},{n:100,t:"🎡 Bedava çevirme",spin:1},{n:200,t:"🪙 +150",c:150},{n:400,t:"💡 +5 🪙 +200",h:5,c:200}];
 function claim(n){
   const m=MS.find(x=>x.n===n);if(!m||S.claimed.includes(n)||S.box.length<n)return;
-  S.claimed.push(n);S.hints+=m.h||0;S.coins+=m.c||0;if(m.spin)S.lastSpin="";
+  S.claimed.push(n);S.hints+=m.h||0;S.coins+=m.c||0;if(m.spin){S.lastSpin="";S.lastSpinAt=0}
   save();upd();beep(700,.2);confetti();openBox();
 }
 function openBox(){
   $("bxh").textContent="Bonus Kutusu";const L=curL,pos=L.all.filter(w=>!G.words.some(x=>x.w===w)).length,nb=S.box.length;
-  $("bxs").textContent="Bu seviye: "+bonus.size+" / "+pos+" bonus kelime · Kutuda toplam "+nb+" kelime"+(treasure?" · 💎 "+(bonus.has(treasure)?"Hazine kelime bulundu":"Bu seviyede 1 hazine kelime gizli"):"");
+  $("bxs").innerHTML=E("Bu seviye: "+bonus.size+" / "+pos+" bonus kelime · Kutuda toplam "+nb+" kelime"+(treasure?" · 💎 "+(bonus.has(treasure)?"Hazine kelime bulundu":"Bu seviyede 1 hazine kelime gizli"):""));
   $("bxm").innerHTML=MS.map(m=>{const ok=nb>=m.n,got=S.claimed.includes(m.n);
-    return `<div class="ms"><span>${m.n} kelime → ${m.t}</span>${got?"<em>✓ Alındı</em>":ok?`<button data-n="${m.n}">Al</button>`:`<em>${nb}/${m.n}</em>`}</div>`}).join("");
+    return `<div class="ms"><span>${m.n} kelime → ${E(m.t)}</span>${got?"<em>✓ Alındı</em>":ok?`<button data-n="${m.n}">Al</button>`:`<em>${nb}/${m.n}</em>`}</div>`}).join("");
   $("bxm").querySelectorAll("button").forEach(b=>b.onclick=()=>claim(+b.dataset.n));
   $("bxw").innerHTML=[...bonus].map(w=>`<span>${w}</span>`).join("")+S.box.filter(w=>!bonus.has(w)).map(w=>`<span class="old">${w}</span>`).join("")||"Henüz bonus kelime yok";
   $("bx").classList.add("show");
@@ -524,7 +592,24 @@ async function restore(){
 $("file").onchange=async e=>{const f=e.target.files[0];if(f)applyText(await f.text());e.target.value=""};
 $("bk").onclick=backup;$("rs").onclick=restore;
 {const h=document.querySelector("#menu h1");h.innerHTML=[...h.textContent].map(c=>c===" "?"<i></i>":`<span>${c}</span>`).join("")}
-theme();upd();
+theme();upd();tick();
+
+/* PWA: servis çalışanı + doğrudan kurulum butonu */
+if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+{
+  let dp=null;
+  const installed=()=>matchMedia("(display-mode: standalone)").matches||matchMedia("(display-mode: fullscreen)").matches||navigator.standalone===true;
+  const sync=on=>{$("inst").hidden=on;$("lbtn").hidden=!on;if(on)upd()};
+  sync(installed());
+  addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e});
+  const go=async()=>{
+    if(!dp)return;
+    const p=dp;dp=null;
+    try{await p.prompt();await p.userChoice}catch(e){}
+  };
+  $("inst").onclick=go;
+  addEventListener("appinstalled",()=>{dp=null;sync(true)});
+}
 </script>
 </body>
 </html>
