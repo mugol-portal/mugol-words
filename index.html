@@ -289,23 +289,33 @@ function theme(){document.documentElement.dataset.theme=S.theme==="auto"?(mq.mat
 mq.addEventListener("change",theme);
 
 /* Sözlük ve seviye üretimi */
-const KD=window.KD||{},HEP=k=>[3,4,5,6,7].map(n=>KD[n]&&KD[n][k]||"").join(" ");
-const BASE=[...new Set(HEP("ana").split(/\s+/).filter(w=>w.length>2))],BS=new Set(BASE);
-const EK=[...new Set(HEP("ek").split(/\s+/).filter(w=>w.length>2&&!BS.has(w)))],ES=new Set(EK);
+const KD=window.KD||{};
+/* Tek kelime listesi (3-7 harf). Dosyalardaki sıra: yaygın kelimeler önce. */
+const WL=[...new Set([3,4,5,6,7].map(n=>KD[n]||"").join(" ").split(/\s+/).filter(w=>w.length>2))];
+const CH="ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ";
 const cnt=s=>{const c={};for(const h of s)c[h]=(c[h]||0)+1;return c};
 const can=(w,c)=>{c={...c};for(const h of w){if(!c[h])return false;c[h]--}return true};
-const hash=s=>[...s].reduce((a,h)=>(a*31+h.charCodeAt(0))%9973,7);
-const STD=BASE.filter(w=>w.length>4&&w.length<8).map(b=>{const c=cnt(b);return{b,n:BASE.filter(w=>w!==b&&can(w,c)).length}})
-  .filter(x=>x.n>=4).sort((a,b)=>a.b.length-b.b.length||hash(a.b)-hash(b.b));
+const msk=w=>{let x=0;for(const h of w){const i=CH.indexOf(h);if(i>=0)x|=1<<i}return x};
 let DICT,DS,LV;
-/* Sözlük + kullanıcının eklediği kelimeler. Standart seviyelerin sırası sabit kalır, kendi kelimelerinden çıkan yeni seviyeler sona eklenir. */
+/* Seviyeler: 5-7 harfli her kelime bir seviye olabilir (en az 4 alt kelime çıkarsa).
+   Sıra: kısa kelimeler önce başlar, uzunlar giderek karışır. Listenin sonuna eklenen kelimeler mevcut seviyeleri kaydırmaz. */
 function mk(){
-  DICT=[...new Set([...BASE,...EK])];DS=new Set(DICT);
-  const q=b=>{const c=cnt(b);return{b,c,all:DICT.filter(w=>w!==b&&can(w,c))}};
-  const srt=(a,b)=>a.b.length-b.b.length||a.b.localeCompare(b.b,"tr");
-  const yk=EK.filter(w=>w.length>4&&w.length<8).map(q).filter(x=>x.all.length>=4).sort(srt);
-  const ex=[];
-  LV=[...STD.map(x=>q(x.b)),...yk,...ex];
+  DICT=WL;DS=new Set(DICT);
+  const ix=DICT.map(w=>Uint8Array.from(w,h=>CH.indexOf(h))),dm=DICT.map(msk),tmp=new Int8Array(32),cc=new Int8Array(32);
+  const st={5:0,6:40,7:100},rt={5:1,6:1.2,7:1.5},ct={5:0,6:0,7:0},lv=[];
+  DICT.forEach((b,j)=>{
+    const n=b.length;if(n<5||n>7)return;
+    const key=ct[n]++*rt[n]+st[n],m=dm[j],all=[];
+    cc.fill(0);for(const i of ix[j])cc[i]++;
+    for(let k=0;k<DICT.length;k++){
+      if(k===j||DICT[k].length>n||(dm[k]&~m))continue;
+      tmp.set(cc);let ok=true;
+      for(const i of ix[k])if(--tmp[i]<0){ok=false;break}
+      if(ok)all.push(DICT[k]);
+    }
+    if(all.length>=4)lv.push({b,c:cnt(b),all,key});
+  });
+  LV=lv.sort((x,y)=>x.key-y.key||x.b.length-y.b.length);
 }
 mk();
 /* Sınırsız seviye: haritada en az 1000 seviye görünür, ilerledikçe 100'er 100'er uzar. Sözlük seviyeleri bitince aynı kelimeler farklı yerleşimle karışık sırayla tekrar gelir. */
