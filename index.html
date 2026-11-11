@@ -296,16 +296,18 @@ const CH="ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ";
 const cnt=s=>{const c={};for(const h of s)c[h]=(c[h]||0)+1;return c};
 const can=(w,c)=>{c={...c};for(const h of w){if(!c[h])return false;c[h]--}return true};
 const msk=w=>{let x=0;for(const h of w){const i=CH.indexOf(h);if(i>=0)x|=1<<i}return x};
+/* Zor/nadir kelimeler (kelimelerN.js içindeki KH listeleri): zorunlu kelime olarak seçilmez, ana kelime olarak en sona kalır; bulunursa yine bonus sayılır. */
+const HARD=new Set(Object.values(window.KH||{}).join(" ").split(/\s+/).filter(Boolean));
 let DICT,DS,LV;
 /* Seviyeler: 5-7 harfli her kelime bir seviye olabilir (en az 4 alt kelime çıkarsa).
    Sıra: kısa kelimeler önce başlar, uzunlar giderek karışır. Listenin sonuna eklenen kelimeler mevcut seviyeleri kaydırmaz. */
 function mk(){
   DICT=WL;DS=new Set(DICT);
   const ix=DICT.map(w=>Uint8Array.from(w,h=>CH.indexOf(h))),dm=DICT.map(msk),tmp=new Int8Array(32),cc=new Int8Array(32);
-  const st={5:0,6:40,7:100},rt={5:1,6:1.2,7:1.5},ct={5:0,6:0,7:0},lv=[];
+  const st={5:0,6:40,7:100},rt={5:1,6:1.2,7:1.5},ct={5:0,6:0,7:0},ch={5:0,6:0,7:0},lv=[];
   DICT.forEach((b,j)=>{
     const n=b.length;if(n<5||n>7)return;
-    const key=ct[n]++*rt[n]+st[n],m=dm[j],all=[];
+    const hd=HARD.has(b),key=hd?1e5+ch[n]++*rt[n]+st[n]:ct[n]++*rt[n]+st[n],m=dm[j],all=[];
     cc.fill(0);for(const i of ix[j])cc[i]++;
     for(let k=0;k<DICT.length;k++){
       if(k===j||DICT[k].length>n||(dm[k]&~m))continue;
@@ -394,11 +396,13 @@ function renderMap(){
 }
 function start(i){
   lvl=i;const L=curL=LVL(i);$("ov").classList.remove("show");
-  const k=Math.min(L.all.length,4+Math.floor(i/12),7);
-  const words=[L.b,...L.all.slice().sort(()=>Math.random()-.5).slice(0,k)].sort((a,b)=>b.length-a.length);
+  const shuf=a=>a.slice().sort(()=>Math.random()-.5);
+  const ez=L.all.filter(w=>!HARD.has(w)),pool=ez.length>=3?shuf(ez):[...shuf(ez),...shuf(L.all.filter(w=>HARD.has(w)))];
+  const k=Math.min(pool.length,3+Math.floor(i/25),6);
+  const words=[L.b,...pool.slice(0,k)].sort((a,b)=>b.length-a.length);
   G=null;while(!(G=build(words))&&words.length>2)words.pop();
   revealed=new Set();found=new Set();bonus=new Set();gain=0;combo=0;used=0;
-  {const p=L.all.filter(w=>!G.words.some(x=>x.w===w));treasure=p.length?p[Math.floor(Math.random()*p.length)]:""}
+  {let p=L.all.filter(w=>!G.words.some(x=>x.w===w));const pe=p.filter(w=>!HARD.has(w));if(pe.length)p=pe;treasure=p.length?p[Math.floor(Math.random()*p.length)]:""}
   letters=[...L.b].sort(()=>Math.random()-.5);
   $("lv").textContent="Seviye "+(i+1);
   const g=$("grid");g.innerHTML="";g.style.gridTemplateColumns=`repeat(${G.cols},var(--cs))`;

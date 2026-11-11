@@ -24,4 +24,11 @@ KİR EKO TOY ÇAR PÜF İNÇ HÜR SAP ŞAN KİP KÜF BAN MUŞ KOV TUŞ POS TAS K
 MET KİL ŞEN PUF DAM EBE FAL TİN PAK YAR LİM DİP ÇAT GÖM FAZ NAZ BEJ NUR DOK BÖL
 KOR GÜZ ŞAL DEM OYA HUY DÖŞ EĞE GEZ HUŞ KEP KUL KUZ LİF PAR PİK PİŞ SAZ SEZ TAR
 TEP TÜL ÇAP ÇİY DÖV İŞE DOĞ KUS BOĞ AKÜ GEM LOŞ
+ELE YEL ONA ONU EVE EVİ EŞİ
+`;
+// Zor/nadir kelimeler (3 harf): seviyelerde zorunlu kelime olarak çıkmaz, ana kelime olarak en sona kalır. Yine de bulunursa bonus sayılır.
+(window.KH=window.KH||{})[3]=`
+ADİ ANİ ART ARİ AYA AİT DEK DER DOZ DUL ERİ FEN GER HAS HAT KAY KAZ KEL KIÇ KOÇ
+LOR MIH MİL ORG PAT PES PUS ROL SAF SAN SIÇ SÖR SİN TAN TEF TEN TER ULU YAS YEN
+İMA İRİ
 `;
