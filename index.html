@@ -298,6 +298,8 @@ const can=(w,c)=>{c={...c};for(const h of w){if(!c[h])return false;c[h]--}return
 const msk=w=>{let x=0;for(const h of w){const i=CH.indexOf(h);if(i>=0)x|=1<<i}return x};
 /* Zor/nadir kelimeler (kelimelerN.js içindeki KH listeleri): zorunlu kelime olarak seçilmez, ana kelime olarak en sona kalır; bulunursa yine bonus sayılır. */
 const HARD=new Set(Object.values(window.KH||{}).join(" ").split(/\s+/).filter(Boolean));
+/* ZOR=false: zor/nadir kelimeler ana kelime olmaz, zorunlu kelime de olmaz (yalnızca bonus). Eski, zor kelimeli seviyeler için true yap. */
+const ZOR=false;
 let DICT,DS,LV;
 /* Seviyeler: 5-7 harfli her kelime bir seviye olabilir (en az 4 alt kelime çıkarsa).
    Sıra: kısa kelimeler önce başlar, uzunlar giderek karışır. Listenin sonuna eklenen kelimeler mevcut seviyeleri kaydırmaz. */
@@ -315,7 +317,7 @@ function mk(){
       for(const i of ix[k])if(--tmp[i]<0){ok=false;break}
       if(ok)all.push(DICT[k]);
     }
-    if(all.length>=4)lv.push({b,c:cnt(b),all,key});
+    if(all.length>=4&&(ZOR||(!hd&&all.filter(w=>!HARD.has(w)).length>=3)))lv.push({b,c:cnt(b),all,key});
   });
   LV=lv.sort((x,y)=>x.key-y.key||x.b.length-y.b.length);
 }
@@ -591,9 +593,9 @@ async function backup(){
 function applyText(t){
   try{
     const m=t.match(/MUGOL_SAVE\s*=\s*(\{[\s\S]*\})\s*;?\s*$/),o=JSON.parse(m?m[1]:t);
-    if(typeof o.unlocked!=="number")throw 0;
-    S=Object.assign({},S,o);S.stars=o.stars||{};S.box=Array.isArray(o.box)?o.box:[];S.claimed=Array.isArray(o.claimed)?o.claimed:[];S.custom=Array.isArray(o.custom)?o.custom.filter(w=>/^[A-ZÇĞİÖŞÜ]{3,7}$/.test(w)):[];mk();
-    save();theme();upd();info("Yedek yüklendi: "+S.unlocked+" seviye, "+S.score+" puan.");
+    if(typeof o.unlocked!=="number"&&typeof o.coins!=="number")throw 0;
+    S=Object.assign({},S,o);S.stars=o.stars||S.stars||{};S.box=Array.isArray(o.box)?o.box:(S.box||[]);S.claimed=Array.isArray(o.claimed)?o.claimed:(S.claimed||[]);S.custom=Array.isArray(o.custom)?o.custom.filter(w=>/^[A-ZÇĞİÖŞÜ]{3,7}$/.test(w)):(S.custom||[]);mk();
+    save();theme();upd();info("Yedek yüklendi: "+S.unlocked+" seviye, "+S.score+" puan, "+S.coins+" jeton.");
   }catch(e){info("Bu dosya geçerli bir MuGöl Words yedeği değil.")}
 }
 async function restore(){
